@@ -25,6 +25,8 @@ return [
 
     'servers' => env('SPEEDTEST_SERVERS'),
 
+    'mode' => env('SPEEDTEST_MODE', 'random'),
+
     'blocked_servers' => env('SPEEDTEST_BLOCKED_SERVERS'),
 
     'interface' => env('SPEEDTEST_INTERFACE'),
