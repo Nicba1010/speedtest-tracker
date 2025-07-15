@@ -18,10 +18,28 @@ class CheckForScheduledSpeedtests
             return;
         }
 
-        RunSpeedtest::runIf(
-            $this->isSpeedtestDue(schedule: $schedule),
-            scheduled: true,
-        );
+        if (! $this->isSpeedtestDue(schedule: $schedule)) {
+            return;
+        }
+
+        if (config('speedtest.mode', 'random') === 'sequential') {
+            $servers = array_filter(
+                array_map('trim', explode(',', (string) config('speedtest.servers')))
+            );
+
+            if (count($servers)) {
+                foreach ($servers as $serverId) {
+                    RunSpeedtest::run(
+                        scheduled: true,
+                        serverId: (int) $serverId,
+                    );
+                }
+
+                return;
+            }
+        }
+
+        RunSpeedtest::run(scheduled: true);
     }
 
     /**
